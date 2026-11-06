@@ -1,5 +1,6 @@
 import "server-only";
 import { z } from "zod";
+import { SITE } from "@/lib/site";
 
 // Never log anything read here.
 const schema = z.object({
@@ -14,7 +15,7 @@ function read() {
 }
 
 export function siteUrl(): string {
-  return (read().NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
+  return SITE.url;
 }
 
 export function isOxapayEnabled(): boolean {

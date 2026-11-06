@@ -1,9 +1,15 @@
+export const LIVE_URL = "https://deathnote.kortzlab.pro";
+
+function defaultUrl() {
+  return process.env.NODE_ENV === "production" ? LIVE_URL : "http://localhost:3000";
+}
+
 export const SITE = {
   name: "Death Note",
   tagline: "Every name is a door. Some only open once.",
   description:
     "A dark, cinematic, interactive notebook. Open the cursed book, read its rules and write in ink. An unofficial fan-inspired art project.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || defaultUrl()).replace(/\/$/, ""),
   repo: "https://github.com/KortzLab/DeathNote",
   credits: {
     builtBy: { label: "h4sib.pro", href: "https://h4sib.pro" },

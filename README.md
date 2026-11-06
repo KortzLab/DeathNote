@@ -18,7 +18,7 @@ _Every name is a door. Some only open once._
 [![Stars](https://img.shields.io/github/stars/KortzLab/DeathNote?style=flat-square&color=8f0f12)](https://github.com/KortzLab/DeathNote/stargazers)
 [![CI](https://img.shields.io/github/actions/workflow/status/KortzLab/DeathNote/ci.yml?style=flat-square&label=CI)](https://github.com/KortzLab/DeathNote/actions/workflows/ci.yml)
 
-**[Live Demo](https://h4sib.pro)** · **[h4sib.pro](https://h4sib.pro)** · **[kortzlab.pro](https://kortzlab.pro)** · **Discord:** `kirawth` · **Social:** `hasibwth`
+**[Live Demo](https://deathnote.kortzlab.pro)** · **[h4sib.pro](https://h4sib.pro)** · **[kortzlab.pro](https://kortzlab.pro)** · **Discord:** `kirawth` · **Social:** `hasibwth`
 
 </div>
 
