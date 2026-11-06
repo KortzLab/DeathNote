@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: deathnote-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: deathnote
+      POSTGRES_PASSWORD: deathnote
+      POSTGRES_DB: deathnote
+    ports:
+      - "5432:5432"
+    volumes:
+      - deathnote-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deathnote"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  deathnote-pg:
