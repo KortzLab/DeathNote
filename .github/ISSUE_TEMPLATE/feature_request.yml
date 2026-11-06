@@ -1,0 +1,26 @@
+name: ✨ Feature request
+description: Suggest a new page, rule, animation or improvement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like?
+      description: Describe the idea and the problem it solves.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: How could it work?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: ip
+    attributes:
+      label: Originality
+      options:
+        - label: This idea does not require official Death Note artwork, logos, characters or fonts
+          required: true

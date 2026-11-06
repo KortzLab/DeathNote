@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Lint · Typecheck · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: deathnote
+          POSTGRES_PASSWORD: deathnote
+          POSTGRES_DB: deathnote
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U deathnote"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # CI-only throwaway values for an ephemeral database. Not secrets.
+      DATABASE_URL: postgresql://deathnote:deathnote@localhost:5432/deathnote?schema=public
+      AUTH_SECRET: ci-only-not-a-secret-${{ github.run_id }}
+      AUTH_TRUST_HOST: "true"
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      # Sponsoring is enabled so the modal can be tested; the throwaway key is never sent anywhere
+      # because the tests stop before creating an invoice.
+      OXAPAY_ENABLED: "true"
+      OXAPAY_MERCHANT_API_KEY: ci-placeholder-${{ github.run_id }}
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Migrate database
+        run: npx prisma migrate deploy
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end tests
+        run: npm run test:e2e -- --trace off
