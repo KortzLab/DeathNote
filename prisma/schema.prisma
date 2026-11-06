@@ -1,0 +1,204 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Auth.js
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  passwordHash  String?   @map("password_hash")
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  accounts     Account[]
+  sessions     Session[]
+  notebooks    Notebook[]
+  sponsorships Sponsorship[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Notebook
+
+model Notebook {
+  id        String    @id @default(cuid())
+  ownerId   String    @map("owner_id")
+  title     String    @default("Death Note")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  owner User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  pages Page[]
+
+  @@index([ownerId, deletedAt])
+  @@map("notebooks")
+}
+
+model Page {
+  id         String    @id @default(cuid())
+  notebookId String    @map("notebook_id")
+  number     Int
+  title      String?
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  notebook Notebook @relation(fields: [notebookId], references: [id], onDelete: Cascade)
+  notes    Note[]
+
+  @@unique([notebookId, number])
+  @@index([notebookId, deletedAt])
+  @@map("pages")
+}
+
+model Note {
+  id        String    @id @default(cuid())
+  pageId    String    @map("page_id")
+  /// Client-generated id so guest notes can be imported idempotently.
+  clientId  String?   @map("client_id")
+  name      String
+  cause     String?
+  details   String?
+  time      String?
+  /// Set when the 40-second countdown finished and the ink "set".
+  sealedAt  DateTime? @map("sealed_at")
+  position  Int       @default(0)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, clientId])
+  @@index([pageId, deletedAt, position])
+  @@index([name])
+  @@map("notes")
+}
+
+// Sponsors
+
+enum SponsorshipStatus {
+  pending
+  paying
+  paid
+  expired
+  failed
+  refunded
+}
+
+model Sponsorship {
+  id            String            @id @default(cuid())
+  orderId       String            @unique @map("order_id")
+  userId        String?           @map("user_id")
+  /// Amount in the smallest unit (cents) to avoid floating point errors.
+  amountCents   Int               @map("amount_cents")
+  currency      String            @default("USD")
+  charityCents  Int               @map("charity_cents")
+  status        SponsorshipStatus @default(pending)
+  oxapayTrackId String?           @unique @map("oxapay_track_id")
+  paymentUrl    String?           @map("payment_url")
+  name          String?
+  message       String?
+  showPublicly  Boolean           @default(false) @map("show_publicly")
+  paidAt        DateTime?         @map("paid_at")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+
+  user   User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  events WebhookEvent[]
+
+  @@index([status, createdAt])
+  @@index([showPublicly, status])
+  @@map("sponsorships")
+}
+
+model WebhookEvent {
+  id            String       @id @default(cuid())
+  provider      String       @default("oxapay")
+  /// Deterministic id (sha256 of the raw body) — guarantees idempotency.
+  eventKey      String       @unique @map("event_key")
+  trackId       String?      @map("track_id")
+  status        String?
+  signatureOk   Boolean      @map("signature_ok")
+  payload       Json
+  processedAt   DateTime?    @map("processed_at")
+  error         String?
+  sponsorshipId String?      @map("sponsorship_id")
+  createdAt     DateTime     @default(now()) @map("created_at")
+
+  sponsorship Sponsorship? @relation(fields: [sponsorshipId], references: [id], onDelete: SetNull)
+
+  @@index([trackId])
+  @@index([createdAt])
+  @@map("webhook_events")
+}
+
+// Ops
+
+/// Fixed-window rate limit buckets (works across serverless instances).
+model RateLimit {
+  key       String   @id
+  count     Int
+  resetAt   DateTime @map("reset_at")
+
+  @@index([resetAt])
+  @@map("rate_limits")
+}
