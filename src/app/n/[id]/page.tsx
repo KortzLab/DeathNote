@@ -17,13 +17,22 @@ async function load(id: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const note = await load((await params).id);
+  const { id } = await params;
+  const note = await load(id);
   if (!note) return { title: "Page not found" };
-  const who = note.name ?? "A name, blotted out";
+
+  const title = `${note.name ?? "A name, blotted out"} — a page from the Death Note`;
+  const description =
+    [note.cause, note.time].filter(Boolean).join(" · ") || "A page torn from the notebook.";
+
+  // Spell out the share tags: otherwise the layout's site-wide title and URL leak into
+  // link previews. The images come from opengraph-image.tsx / twitter-image.tsx here.
   return {
-    title: `${who} — a page from the Death Note`,
-    description:
-      [note.cause, note.time].filter(Boolean).join(" · ") || "A page torn from the notebook.",
+    title,
+    description,
+    alternates: { canonical: `/n/${id}` },
+    openGraph: { type: "article", title, description, url: `/n/${id}`, siteName: "Death Note" },
+    twitter: { card: "summary_large_image", title, description },
     robots: { index: false, follow: true },
   };
 }
