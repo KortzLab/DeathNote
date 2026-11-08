@@ -225,18 +225,20 @@ random password each time it runs.
 
 Names and descriptions only. Never commit real values; `.env` is ignored by git.
 
-| Variable                  | Required | Description                                                           |
-| ------------------------- | :------: | --------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`    |    ✅    | Public URL of the site, used for callbacks, OG tags and the sitemap   |
-| `DATABASE_URL`            |    ✅    | PostgreSQL connection string                                          |
-| `AUTH_SECRET`             |    ✅    | Secret used by Auth.js to sign sessions (`npx auth secret`)           |
-| `AUTH_TRUST_HOST`         |    ⬜    | `true` when running behind a proxy or on a VPS                        |
-| `ADMIN_EMAILS`            |    ⬜    | Comma-separated e-mails that can open `/admin`                        |
-| `OXAPAY_ENABLED`          |    ⬜    | `true` to show the sponsor buttons and accept payments                |
-| `OXAPAY_MERCHANT_API_KEY` |    ⬜    | OxaPay merchant key (server only, never logged or sent to the client) |
+| Variable                   | Required | Description                                                           |
+| -------------------------- | :------: | --------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`     |    ✅    | Public URL of the site, used for callbacks, OG tags and the sitemap   |
+| `GOOGLE_SITE_VERIFICATION` |    ⬜    | Google Search Console verification code (meta tag content)            |
+| `BING_SITE_VERIFICATION`   |    ⬜    | Bing Webmaster Tools verification code (`msvalidate.01` content)      |
+| `DATABASE_URL`             |    ✅    | PostgreSQL connection string                                          |
+| `AUTH_SECRET`              |    ✅    | Secret used by Auth.js to sign sessions (`npx auth secret`)           |
+| `AUTH_TRUST_HOST`          |    ⬜    | `true` when running behind a proxy or on a VPS                        |
+| `ADMIN_EMAILS`             |    ⬜    | Comma-separated e-mails that can open `/admin`                        |
+| `OXAPAY_ENABLED`           |    ⬜    | `true` to show the sponsor buttons and accept payments                |
+| `OXAPAY_MERCHANT_API_KEY`  |    ⬜    | OxaPay merchant key (server only, never logged or sent to the client) |
 
-> `OXAPAY_ENABLED` is read when pages are built, so redeploy after
-> changing them.
+> `OXAPAY_ENABLED` and the two `*_SITE_VERIFICATION` codes are read when pages are built, so
+> redeploy after changing them.
 
 ## 🗄️ Database & Migrations
 

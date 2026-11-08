@@ -23,7 +23,7 @@ export async function HomeFeed() {
   const { shares, fresh, stats } = data;
 
   return (
-    <div className="relative mx-auto max-w-6xl space-y-24 px-4 py-24 sm:px-6">
+    <div className="relative mx-auto max-w-6xl space-y-24 px-4 pt-20 pb-24 sm:px-6">
       <section aria-labelledby="shared-heading">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>

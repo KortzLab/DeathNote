@@ -8,7 +8,7 @@ export const SITE = {
   name: "Death Note",
   tagline: "Every name is a door. Some only open once.",
   description:
-    "A dark, cinematic, interactive notebook. Open the cursed book, read its rules and write in ink. An unofficial fan-inspired art project.",
+    "Write in the Death Note online: a free, interactive 3D notebook. Watch it fall, learn its rules, write a name in ink and share the page. Unofficial fan project.",
   url: (process.env.NEXT_PUBLIC_SITE_URL || defaultUrl()).replace(/\/$/, ""),
   repo: "https://github.com/KortzLab/DeathNote",
   credits: {

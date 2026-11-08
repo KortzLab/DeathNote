@@ -1,16 +1,31 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Prose } from "@/components/ui/Prose";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { FAQ } from "@/content/faq";
 import { SITE } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "About & credits",
-  description: "Who made this notebook, how it was built, and the credits.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "About Death Note Online — FAQ & Credits",
+  description:
+    "Is this the official Death Note? Is it free? Who can see your notes? Answers to common questions, how the interactive notebook was built, and the credits.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   const { credits } = SITE;
   return (
     <Prose eyebrow="About & credits" title="Who left this here?">
+      <JsonLd
+        data={{
+          "@type": "FAQPage",
+          mainEntity: FAQ.map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: { "@type": "Answer", text: a },
+          })),
+        }}
+      />
       <p>
         <strong className="text-bone">Death Note</strong> is an interactive art piece: a cursed
         black notebook you can open, read and write in. It is a love letter to a concept, built with
@@ -75,6 +90,18 @@ export default function AboutPage() {
           License)
         </li>
       </ul>
+
+      <section aria-labelledby="faq" className="space-y-4">
+        <h2 id="faq" className="font-gothic text-bone text-3xl">
+          Questions
+        </h2>
+        {FAQ.map(({ q, a }) => (
+          <details key={q} className="border-smoke bg-abyss/70 group rounded-xl border p-5">
+            <summary className="text-bone cursor-pointer font-serif">{q}</summary>
+            <p className="text-muted mt-3 text-base">{a}</p>
+          </details>
+        ))}
+      </section>
 
       <h2 className="font-gothic text-bone text-3xl">Safety</h2>
       <p>

@@ -99,7 +99,7 @@ export function Intro() {
       <InkLoader done={stage !== "loading"} />
 
       <h1 id="intro-title" className="sr-only">
-        Death Note, the cursed notebook
+        Death Note Online: write in the interactive cursed notebook
       </h1>
 
       <div className="pointer-events-none absolute inset-x-0 top-20 text-center">

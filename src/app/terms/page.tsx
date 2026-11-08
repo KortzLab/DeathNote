@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Prose } from "@/components/ui/Prose";
 import { SITE } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Terms",
-  description: "The rules for using this site (the human ones).",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Terms of Use · Death Note Online",
+  description:
+    "The human rules for using the Death Note website: write fiction only, never target real people, respect moderation, and how sponsorships and public pages work.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

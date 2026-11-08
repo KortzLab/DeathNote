@@ -14,6 +14,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Home page feed of shared pages and the latest Open Book entries
 - Candles (one per person) and reports; three reports hide an item until reviewed
 - Moderation queue in `/admin` (hide, restore, dismiss)
+- SEO: keyword-led titles and descriptions, canonical URLs and per-page Open Graph tags on every
+  page; JSON-LD (Organization, WebSite, WebApplication, rules ItemList, FAQPage); a crawlable
+  intro on the home page; an FAQ on `/about`; web manifest and PNG / Apple touch icons;
+  optional Google and Bing verification through `GOOGLE_SITE_VERIFICATION` and
+  `BING_SITE_VERIFICATION`
 
 ### Changed
 

@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { db } from "@/lib/db";
 import { isOxapayEnabled } from "@/lib/env";
 import { formatUsd } from "@/lib/validation/sponsor";
 import { SponsorCta } from "@/components/sponsor/SponsorCta";
 
-export const metadata: Metadata = {
-  title: "Supporters",
-  description: "The people who fed the notebook. 70% of every sponsorship goes to charity.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Supporters — The People Who Fed the Notebook",
+  description:
+    "The supporters who keep the Death Note online. Sponsor with crypto through OxaPay; 70% of every sponsorship goes to charity and the rest keeps the site running.",
+  path: "/supporters",
+});
 
 export const revalidate = 60;
 

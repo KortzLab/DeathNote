@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { NotebookApp } from "@/components/notebook/NotebookApp";
 
-export const metadata: Metadata = {
-  title: "The Notebook",
+export const metadata: Metadata = pageMetadata({
+  title: "Write in the Death Note — Your Private Notebook",
   description:
-    "Write in the notebook. Your entries are private and stay in your browser or your account.",
-};
+    "Write a name in your own Death Note. Ink bleeds in, a 40-second clock starts and the page saves to your browser or your account. Free, no sign-up needed.",
+  path: "/notebook",
+  keywords: ["write a name in the death note", "death note writing", "death note 40 seconds"],
+});
 
 export default function NotebookPage() {
   return (

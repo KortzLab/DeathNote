@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Prose } from "@/components/ui/Prose";
 import { SITE } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Privacy",
-  description: "What the notebook stores, where, and for how long.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Privacy Policy · Death Note Online",
+  description:
+    "What the Death Note website stores, where it is kept and for how long: private notes, public entries, reports, sponsorships and the minimal data behind them.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
