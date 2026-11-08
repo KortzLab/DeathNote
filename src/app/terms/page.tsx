@@ -24,8 +24,9 @@ export default function TermsPage() {
         </li>
         <li>
           <strong className="text-bone">Your words are yours.</strong> You keep ownership of what
-          you write. Notes are private by default. Images you export or share are created on purpose
-          by you, with an option to blur names.
+          you write. Your own notebook is private. What you write in the Open Book or choose to
+          share is public; by publishing it you let us display it on this site. Fictional names
+          only: entries naming real people are removed.
         </li>
         <li>
           <strong className="text-bone">Sponsorships are voluntary.</strong> They do not buy any

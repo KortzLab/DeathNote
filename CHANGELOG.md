@@ -6,6 +6,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+
+- The Open Book: a public notebook anyone can write in, with unlimited pages, chapters,
+  live updates, pen names, page jumps and a random page; authors can withdraw their entries
+- Share any note as its own page (`/n/<id>`) with a generated preview image; optional blotted
+  names that never reach the browser; owners can unshare
+- Home page feed of shared pages and the latest Open Book entries
+- Candles (one per person) and reports; three reports hide an item until reviewed
+- Moderation queue in `/admin` (hide, restore, dismiss)
+
+### Security
+
+- Client IP for rate limits now comes from `X-Real-IP` or the last `X-Forwarded-For` hop, so
+  a spoofed header can't dodge limits or fake multiple reporters
+
 ### Changed
 
 - Monochrome gothic theme closer to the anime's look: cold black-and-white palette, stark white

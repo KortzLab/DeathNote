@@ -21,12 +21,27 @@ export default function PrivacyPage() {
       <h2 className="font-gothic text-bone text-3xl">With an account</h2>
       <p>
         When you sign in, your notes are stored in our database so they can sync across your
-        devices. Notes are private: only you can read them. There is no public feed of names. Your
-        password is stored only as an argon2id hash.
+        devices. Notes in your own notebook are private: only you can read them. Your password is
+        stored only as an argon2id hash.
       </p>
       <p>
         Deleted notes are hidden immediately and kept briefly as a soft delete so mistakes can be
         recovered; ask us to remove your account and its notes entirely at any time.
+      </p>
+
+      <h2 className="font-gothic text-bone text-3xl">The Open Book and shared pages</h2>
+      <p>
+        These are public by design. Anything you write in the Open Book, and any page you choose to
+        share, can be read by anyone and appears on the home page. Shared pages are a copy: editing
+        or deleting the original note does not change them. If you blot out the name, the name is
+        never sent to anyone&apos;s browser.
+      </p>
+      <p>
+        Alongside the text and your optional pen name we store a one-way hash of your network
+        address (to rate-limit writing and count one report or candle per person) and a hash of a
+        token kept in your browser, which lets you withdraw your entry or unshare your page later.
+        We never store your IP address itself. Reported items may be hidden and reviewed by a
+        moderator.
       </p>
 
       <h2 className="font-gothic text-bone text-3xl">Sponsorships</h2>
@@ -39,7 +54,10 @@ export default function PrivacyPage() {
       <h2 className="font-gothic text-bone text-3xl">Cookies and storage</h2>
       <ul className="list-disc space-y-2 pl-6">
         <li>A session cookie when you are signed in (Auth.js)</li>
-        <li>localStorage for guest notes, your sound preference and the lighter-mode toggle</li>
+        <li>
+          localStorage for guest notes, your sound preference, the lighter-mode toggle, your pen
+          name and the tokens that let you withdraw what you published
+        </li>
         <li>No advertising or third-party tracking scripts</li>
       </ul>
 

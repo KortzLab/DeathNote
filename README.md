@@ -78,8 +78,17 @@ Turn sound on in the header first if you also record video.
 - **Guests write immediately** (localStorage). **Signed-in users** (e-mail and password)
   sync to PostgreSQL with debounced autosave, a "saved" ink stamp and a one-click import of guest
   notes. Search, edit, delete, export a page as **PNG or PDF**, or share an image with names blurred.
-- **Privacy & safety** — notes are private, there is no public feed, a content guard blocks threats,
-  slurs and personal data, and writes are rate limited.
+- **The Open Book** — one public notebook everyone can write in, no sign-in needed. Unlimited
+  pages (loaded a chapter at a time), autosaved on write, live "new names" updates, pen names,
+  page jumps and a random page. Authors can withdraw their own entries.
+- **Shared pages** — share any note from your notebook or the Open Book. It gets its own page
+  (`/n/<id>`) with a generated preview image and shows up on the home page. Names can be blotted
+  out, and a blotted name never reaches the browser. Owners can unshare.
+- **Candles & reports** — light a candle for a page (one per person), or report it. Three
+  reports from different people hide an item until a moderator reviews it in `/admin`.
+- **Privacy & safety** — your own notebook stays private; public content goes through the same
+  content guard (threats, slurs, personal data), strict rate limits, and IPs are only ever
+  stored as salted hashes.
 - **Sponsor with crypto (OxaPay)** — recommended chips and a custom amount, a live "70% goes to
   charity" split, verified webhooks only, a themed return page and an opt-in supporters page.
 - **Accessible & fast** — reduced-motion version with fades only, lazy-loaded 3D with an ink
@@ -325,8 +334,10 @@ Put Caddy or Nginx in front for HTTPS. Keep `.env` readable only by the service 
 ├── scripts/                 # send-test-webhook.ts
 ├── src/
 │   ├── app/                 # routes (App Router)
-│   │   ├── api/             # notes, sponsor, webhooks/oxapay, auth, account
-│   │   ├── notebook/        # the writing experience
+│   │   ├── api/             # notes, public, shares, reports, candles, sponsor, webhooks/oxapay, auth
+│   │   ├── notebook/        # the private writing experience
+│   │   ├── public/          # the Open Book
+│   │   ├── n/[id]/          # a shared page and its preview image
 │   │   ├── rules/           # scroll-driven rules
 │   │   ├── supporters/  sponsor/return/  admin/
 │   │   ├── about/  privacy/  terms/  secret/  signin/
@@ -338,6 +349,8 @@ Put Caddy or Nginx in front for HTTPS. Keep `.env` readable only by the service 
 │   │   ├── notebook/        # FlipBook, InkText, CountdownRing, Candle, pages
 │   │   ├── fx/              # quill cursor, shinigami, whispers, Konami, apple
 │   │   ├── sponsor/         # modal, triggers, return page
+│   │   ├── public/          # Open Book, share/report dialogs, paper cards
+│   │   ├── home/            # home page feed
 │   │   └── layout/ ui/ providers/ rules/ auth/
 │   ├── content/rules.ts     # the 18 original rules
 │   ├── lib/                 # validation, content guard, oxapay, server helpers, hooks, sound
@@ -357,7 +370,7 @@ Put Caddy or Nginx in front for HTTPS. Keep `.env` readable only by the service 
 - [ ] Recorded GIFs for the README
 - [ ] Account deletion from the UI
 - [ ] More notebook covers and paper styles
-- [ ] Optional moderated share links (opt-in, names blurred, with reporting)
+- [x] Public Open Book and shareable pages with candles, reports and moderation
 
 ## 🤝 Contributing
 

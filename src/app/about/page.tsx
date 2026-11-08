@@ -77,7 +77,10 @@ export default function AboutPage() {
       </ul>
 
       <h2 className="font-gothic text-bone text-3xl">Safety</h2>
-      <p>{SITE.safety} Notes are private by default and there is no public feed of names, ever.</p>
+      <p>
+        {SITE.safety} Your own notebook is private. The Open Book and shared pages are public, so
+        every entry there can be reported, and reported entries are hidden for review.
+      </p>
       <p>
         Found something that should not be here, or a security issue? Reach out on Discord (
         <span className="text-bone">{credits.discord}</span>) or through{" "}
