@@ -25,6 +25,13 @@ export const InkText = memo(function InkText({
     <span className={`ink ${className}`}>
       <span className="sr-only">{text}</span>
       {chars.map((ch, i) => {
+        // Plain spaces between the animated glyphs give the browser somewhere to wrap.
+        if (ch === " ")
+          return (
+            <span key={i} aria-hidden>
+              {" "}
+            </span>
+          );
         const fresh = animate && i >= fromIndex;
         return (
           <span
@@ -33,7 +40,7 @@ export const InkText = memo(function InkText({
             className={fresh ? "ink-char" : undefined}
             style={fresh ? { animationDelay: `${(i - fromIndex) * stagger}s` } : undefined}
           >
-            {ch === " " ? " " : ch}
+            {ch}
           </span>
         );
       })}
