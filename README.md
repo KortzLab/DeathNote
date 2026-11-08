@@ -207,16 +207,17 @@ random password each time it runs.
 <details>
 <summary><b>Useful scripts</b></summary>
 
-| Script                                                       | What it does                                     |
-| ------------------------------------------------------------ | ------------------------------------------------ |
-| `npm run dev`                                                | Development server                               |
-| `npm run build` / `npm start`                                | Production build / server                        |
-| `npm run lint` · `npm run typecheck` · `npm run format`      | Quality checks                                   |
-| `npm test`                                                   | Unit tests (Vitest)                              |
-| `npm run test:e2e`                                           | End-to-end tests (Playwright)                    |
-| `npm run db:up` / `db:down`                                  | Start / stop Postgres in Docker                  |
-| `npm run db:migrate` · `db:deploy` · `db:seed` · `db:studio` | Prisma                                           |
-| `npm run webhook:test -- <order_id> [status]`                | Send a signed test callback to your local server |
+| Script                                                       | What it does                                                                              |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `npm run dev`                                                | Development server                                                                        |
+| `npm run build` / `npm start`                                | Production build / server                                                                 |
+| `npm run lint` · `npm run typecheck` · `npm run format`      | Quality checks                                                                            |
+| `npm test`                                                   | Unit tests (Vitest)                                                                       |
+| `npm run test:e2e`                                           | End-to-end tests (Playwright)                                                             |
+| `npm run db:up` / `db:down`                                  | Start / stop Postgres in Docker                                                           |
+| `npm run db:migrate` · `db:deploy` · `db:seed` · `db:studio` | Prisma                                                                                    |
+| `npm run webhook:test -- <order_id> [status]`                | Send a signed test callback to your local server                                          |
+| `npm run seed:public`                                        | Add 15 sample Open Book entries and 10 shared pages (safe to re-run, works in production) |
 
 </details>
 

@@ -28,7 +28,8 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "webhook:test": "tsx scripts/send-test-webhook.ts"
+    "webhook:test": "tsx scripts/send-test-webhook.ts",
+    "seed:public": "tsx scripts/seed-public.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
