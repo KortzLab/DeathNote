@@ -31,8 +31,12 @@ export async function rateLimit(
   }
 }
 
+// The left-most X-Forwarded-For entry is whatever the client sent, so never trust it.
+// Vercel and nginx (proxy_set_header X-Real-IP) set X-Real-IP; otherwise take the entry our
+// own proxy appended last.
 export function clientIp(req: Request): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0]?.trim() || "unknown";
-  return req.headers.get("x-real-ip") ?? "unknown";
+  const real = req.headers.get("x-real-ip")?.trim();
+  if (real) return real;
+  const hops = req.headers.get("x-forwarded-for")?.split(",") ?? [];
+  return hops.at(-1)?.trim() || "unknown";
 }
