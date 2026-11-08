@@ -233,12 +233,33 @@ Names and descriptions only. Never commit real values; `.env` is ignored by git.
 | `DATABASE_URL`             |    ✅    | PostgreSQL connection string                                          |
 | `AUTH_SECRET`              |    ✅    | Secret used by Auth.js to sign sessions (`npx auth secret`)           |
 | `AUTH_TRUST_HOST`          |    ⬜    | `true` when running behind a proxy or on a VPS                        |
-| `ADMIN_EMAILS`             |    ⬜    | Comma-separated e-mails that can open `/admin`                        |
+| `ADMIN_EMAILS`             |    ⬜    | Comma-separated admin e-mails (see Admin access below)                |
 | `OXAPAY_ENABLED`           |    ⬜    | `true` to show the sponsor buttons and accept payments                |
 | `OXAPAY_MERCHANT_API_KEY`  |    ⬜    | OxaPay merchant key (server only, never logged or sent to the client) |
 
 > `OXAPAY_ENABLED` and the two `*_SITE_VERIFICATION` codes are read when pages are built, so
 > redeploy after changing them.
+
+## 🛡️ Admin access
+
+`/admin` holds the sponsorship ledger and the moderation queue. An account is an admin only when
+**both** are true: its e-mail is in `ADMIN_EMAILS`, and it was created on the server with the
+admin script. The site's own sign-up refuses admin e-mails, so nobody can claim yours first.
+
+1. Put your e-mail in `ADMIN_EMAILS` on the server and redeploy (or restart).
+2. On the server, with the production `DATABASE_URL` and `ADMIN_EMAILS` in the environment, run:
+
+   ```bash
+   npm run admin:create -- you@example.com
+   ```
+
+   Type a unique password (8+ characters) at the hidden prompt. Running it again resets
+   the password and signs out every earlier admin session.
+
+3. Open `/signin`, sign in with that e-mail and password, then visit `/admin`.
+
+Admin rights last 12 hours after you sign in; after that `/admin` asks you to sign in again
+(your notebook session is unaffected). Anyone else, signed in or not, gets a plain 404.
 
 ## 🗄️ Database & Migrations
 
@@ -305,7 +326,7 @@ ngrok http 3000
 3. Set the build command to `npx prisma migrate deploy && next build` (or run `npm run db:deploy`
    once from your machine against the production database).
 4. Set the OxaPay callback domain in your OxaPay merchant settings if required.
-5. Deploy. Visit `/admin` with an e-mail listed in `ADMIN_EMAILS`.
+5. Deploy, then create the admin account (see Admin access above).
 
 </details>
 

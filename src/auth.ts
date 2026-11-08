@@ -6,6 +6,7 @@ import { hash, verify } from "@node-rs/argon2";
 import { db } from "@/lib/db";
 import { credentialsSchema } from "@/lib/validation/auth";
 import { adminEmails } from "@/lib/env";
+import { roleFor } from "@/lib/auth/role";
 import { rateLimit } from "@/lib/server/rate-limit";
 
 // Verifying against a throwaway hash for unknown e-mails keeps response timing uniform.
@@ -49,16 +50,18 @@ export const authConfig = {
   trustHost: true,
   callbacks: {
     async jwt({ token, user }) {
-      if (user?.id) token.sub = user.id;
-      if (user?.email || token.email) {
-        const email = (user?.email ?? token.email ?? "").toLowerCase();
-        token.role = adminEmails().includes(email) ? "ADMIN" : "USER";
+      // `user` is only present right after the password was checked.
+      if (user?.id) {
+        token.sub = user.id;
+        token.authAt = Date.now();
       }
+      token.role = roleFor(user?.email ?? token.email, token.authAt, adminEmails());
       return token;
     },
     async session({ session, token }) {
       if (token.sub) session.user.id = token.sub;
       session.user.role = token.role === "ADMIN" ? "ADMIN" : "USER";
+      session.authAt = token.authAt;
       return session;
     },
   },

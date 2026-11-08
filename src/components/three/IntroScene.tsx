@@ -31,6 +31,18 @@ type Props = {
 };
 
 const CAMERA_START = new THREE.Vector3(0, 3.2, 3.9);
+const CAMERA_OPEN = new THREE.Vector3(0, 3.0, 3.0);
+
+/**
+ * The scene is framed for landscape. On portrait screens the camera moves in so the closed
+ * book fills most of the width, then pulls back just enough for the open spread. The view
+ * width scales with distance * aspect, so the factors scale with 1 / aspect; the constants
+ * were tuned against renders at 9:16.
+ */
+function framing(aspect: number) {
+  if (aspect >= 1) return { closed: 1, open: 1 };
+  return { closed: Math.min(1, 0.42 / aspect), open: Math.min(2.2, 0.92 / aspect) };
+}
 const { lerp } = THREE.MathUtils;
 
 export const IntroScene = forwardRef<IntroHandle, Props>(function IntroScene(props, ref) {
@@ -61,7 +73,8 @@ const World = forwardRef<IntroHandle, Props>(function World(
   { onStage, onLeaf, play, lowPower = false },
   ref,
 ) {
-  const { camera, pointer } = useThree();
+  const { camera, pointer, size } = useThree();
+  const fit = framing(size.width / size.height);
   const assets = useBookAssets(lowPower);
 
   const rig = useRef<THREE.Group>(null);
@@ -76,7 +89,7 @@ const World = forwardRef<IntroHandle, Props>(function World(
   const shake = useRef(0);
   const turned = useRef(0);
   const flipping = useRef(false);
-  const cameraBase = useRef(CAMERA_START.clone());
+  const cameraBase = useRef(CAMERA_START.clone().multiplyScalar(fit.closed));
   const dust = useMemo(() => ({ value: 0 }), []);
 
   const setStage = (s: Stage) => {
@@ -123,7 +136,16 @@ const World = forwardRef<IntroHandle, Props>(function World(
       .to(pivot.rotation, { y: -Math.PI, duration: 0.35, ease: "power1.out" })
       .to(pivot.position, { z: COVER_T, duration: 1.2, ease: "power2.inOut" }, 0.6)
       .to(book.current.position, { x: 0, duration: 1.8, ease: "power2.inOut" }, 0.3)
-      .to(cameraBase.current, { y: 3.0, z: 3.0, duration: 2.2, ease: "power2.inOut" }, 0.2)
+      .to(
+        cameraBase.current,
+        {
+          y: CAMERA_OPEN.y * fit.open,
+          z: CAMERA_OPEN.z * fit.open,
+          duration: 2.2,
+          ease: "power2.inOut",
+        },
+        0.2,
+      )
       .add(() => {
         shake.current = 0.25;
         play("thud", { volume: 0.4, rate: 1.3 });

@@ -1,14 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { checkAdmin } from "@/lib/server/admin";
 import { hide } from "@/lib/server/targets";
 import { targetSchema } from "@/lib/validation/public";
 
 export async function moderate(formData: FormData) {
-  const session = await auth();
-  if (session?.user?.role !== "ADMIN") throw new Error("Forbidden");
+  if (!(await checkAdmin()).ok) throw new Error("Forbidden");
 
   const { targetType, targetId } = targetSchema.parse({
     targetType: formData.get("targetType"),

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { auth } from "@/auth";
+import { notFound, redirect } from "next/navigation";
 import { db } from "@/lib/db";
+import { checkAdmin } from "@/lib/server/admin";
 import { formatUsd } from "@/lib/validation/sponsor";
 import { Moderation } from "@/app/admin/Moderation";
 
@@ -13,8 +13,12 @@ export default async function AdminPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  const session = await auth();
-  if (session?.user?.role !== "ADMIN") notFound();
+  const admin = await checkAdmin();
+  if (!admin.ok) {
+    // Everyone who isn't an admin gets a plain 404; admins just sign in again.
+    if (admin.reason === "forbidden") notFound();
+    redirect("/signin?callbackUrl=/admin");
+  }
 
   const { status } = await searchParams;
   const statuses = ["pending", "paying", "paid", "expired", "failed", "refunded"] as const;

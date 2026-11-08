@@ -89,7 +89,7 @@ export function SignInForm({ callbackUrl, initialError }: Props) {
           type="password"
           autoComplete={mode === "signin" ? "current-password" : "new-password"}
           required
-          minLength={10}
+          minLength={8}
           maxLength={200}
         />
         {message && (

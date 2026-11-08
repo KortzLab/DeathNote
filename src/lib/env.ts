@@ -1,6 +1,7 @@
 import "server-only";
 import { z } from "zod";
 import { SITE } from "@/lib/site";
+import { parseAdminEmails } from "@/lib/auth/role";
 
 // Never log anything read here.
 const schema = z.object({
@@ -30,8 +31,5 @@ export function oxapayKey(): string {
 }
 
 export function adminEmails(): string[] {
-  return (read().ADMIN_EMAILS ?? "")
-    .split(",")
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
+  return parseAdminEmails(read().ADMIN_EMAILS);
 }

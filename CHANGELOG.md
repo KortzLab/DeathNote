@@ -20,6 +20,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
   optional Google and Bing verification through `GOOGLE_SITE_VERIFICATION` and
   `BING_SITE_VERIFICATION`
 
+### Security
+
+- Admin access now requires the account to be created on the server with
+  `npm run admin:create`; the public sign-up refuses e-mails listed in `ADMIN_EMAILS`, so an
+  admin e-mail can no longer be claimed by registering it first
+- Admin rights expire 12 hours after sign-in, and resetting the admin password ends older
+  sessions
+- `/admin` sends signed-out visitors to the sign-in page instead of a 404
+
 ### Changed
 
 - Shared pages always show the name; the option to blot it out was removed
