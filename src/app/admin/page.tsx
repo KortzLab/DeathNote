@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { formatUsd } from "@/lib/validation/sponsor";
+import { Moderation } from "@/app/admin/Moderation";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -47,7 +48,7 @@ export default async function AdminPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 pt-28 pb-16">
-      <h1 className="title-ember text-5xl">Ledger</h1>
+      <h1 className="title-ember text-5xl">Ledger &amp; moderation</h1>
       <dl className="mt-8 grid gap-4 sm:grid-cols-3">
         <Stat label="Received (paid)" value={formatUsd(paid._sum.amountCents ?? 0)} />
         <Stat label="Charity share (70%)" value={formatUsd(paid._sum.charityCents ?? 0)} accent />
@@ -123,6 +124,8 @@ export default async function AdminPage({
           </tbody>
         </table>
       </div>
+
+      <Moderation />
 
       <h2 className="mt-12 font-serif text-xl">Latest webhook deliveries</h2>
       <ul className="text-muted mt-3 space-y-1 font-mono text-xs">
