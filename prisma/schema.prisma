@@ -25,10 +25,12 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  accounts     Account[]
-  sessions     Session[]
-  notebooks    Notebook[]
-  sponsorships Sponsorship[]
+  accounts      Account[]
+  sessions      Session[]
+  notebooks     Notebook[]
+  sponsorships  Sponsorship[]
+  publicEntries PublicEntry[]
+  sharedNotes   SharedNote[]
 
   @@map("users")
 }
@@ -171,18 +173,18 @@ model Sponsorship {
 }
 
 model WebhookEvent {
-  id            String       @id @default(cuid())
-  provider      String       @default("oxapay")
+  id            String    @id @default(cuid())
+  provider      String    @default("oxapay")
   /// Deterministic id (sha256 of the raw body) — guarantees idempotency.
-  eventKey      String       @unique @map("event_key")
-  trackId       String?      @map("track_id")
+  eventKey      String    @unique @map("event_key")
+  trackId       String?   @map("track_id")
   status        String?
-  signatureOk   Boolean      @map("signature_ok")
+  signatureOk   Boolean   @map("signature_ok")
   payload       Json
-  processedAt   DateTime?    @map("processed_at")
+  processedAt   DateTime? @map("processed_at")
   error         String?
-  sponsorshipId String?      @map("sponsorship_id")
-  createdAt     DateTime     @default(now()) @map("created_at")
+  sponsorshipId String?   @map("sponsorship_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
 
   sponsorship Sponsorship? @relation(fields: [sponsorshipId], references: [id], onDelete: SetNull)
 
@@ -195,10 +197,94 @@ model WebhookEvent {
 
 /// Fixed-window rate limit buckets (works across serverless instances).
 model RateLimit {
-  key       String   @id
-  count     Int
-  resetAt   DateTime @map("reset_at")
+  key     String   @id
+  count   Int
+  resetAt DateTime @map("reset_at")
 
   @@index([resetAt])
   @@map("rate_limits")
+}
+
+// Public book
+
+/// An entry in the shared public notebook. Append-only for everyone except its author,
+/// who can withdraw it with the token returned at creation.
+model PublicEntry {
+  id        String    @id @default(cuid())
+  name      String
+  cause     String?
+  details   String?
+  time      String?
+  penName   String?   @map("pen_name")
+  authorId  String?   @map("author_id")
+  /// sha256 of a random token kept in the author's browser.
+  ownerHash String    @map("owner_hash")
+  /// sha256(ip + AUTH_SECRET); raw IPs are never stored.
+  ipHash    String    @map("ip_hash")
+  candles   Int       @default(0)
+  reports   Int       @default(0)
+  hiddenAt  DateTime? @map("hidden_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([hiddenAt, createdAt])
+  @@map("public_entries")
+}
+
+/// A note someone chose to publish. It is a snapshot: editing or deleting the original
+/// note does not change it. The owner can unshare with the token returned at creation.
+model SharedNote {
+  id        String    @id
+  name      String
+  cause     String?
+  details   String?
+  time      String?
+  penName   String?   @map("pen_name")
+  blurName  Boolean   @default(true) @map("blur_name")
+  source    String    @default("notebook")
+  authorId  String?   @map("author_id")
+  ownerHash String    @map("owner_hash")
+  ipHash    String    @map("ip_hash")
+  candles   Int       @default(0)
+  views     Int       @default(0)
+  reports   Int       @default(0)
+  hiddenAt  DateTime? @map("hidden_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([hiddenAt, createdAt])
+  @@map("shared_notes")
+}
+
+enum ReportTarget {
+  public_entry
+  shared_note
+}
+
+model Report {
+  id         String       @id @default(cuid())
+  targetType ReportTarget @map("target_type")
+  targetId   String       @map("target_id")
+  reason     String
+  ipHash     String       @map("ip_hash")
+  resolvedAt DateTime?    @map("resolved_at")
+  createdAt  DateTime     @default(now()) @map("created_at")
+
+  /// one report per person per item
+  @@unique([targetType, targetId, ipHash])
+  @@index([resolvedAt, createdAt])
+  @@map("reports")
+}
+
+/// "Light a candle" reactions, one per person per item.
+model Candle {
+  targetType ReportTarget @map("target_type")
+  targetId   String       @map("target_id")
+  ipHash     String       @map("ip_hash")
+  createdAt  DateTime     @default(now()) @map("created_at")
+
+  @@id([targetType, targetId, ipHash])
+  @@map("candles")
 }

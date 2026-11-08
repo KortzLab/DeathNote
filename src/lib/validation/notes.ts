@@ -30,31 +30,31 @@ type GuardFields = {
   time?: string | null;
 };
 
-function guard(v: GuardFields, ctx: z.RefinementCtx) {
+export function guardNoteFields(v: GuardFields, ctx: z.RefinementCtx) {
   const r = checkAll(v.name, v.cause, v.details, v.time);
   if (!r.ok) ctx.addIssue({ code: "custom", message: GUARD_MESSAGES[r.reason], path: ["name"] });
 }
 
-const fields = {
+export const noteFieldShape = {
   name: requiredName,
   cause: optionalText(NOTE_LIMITS.cause),
   details: optionalText(NOTE_LIMITS.details),
   time: optionalText(NOTE_LIMITS.time),
 };
 
-export const noteFieldsSchema = z.object(fields).superRefine(guard);
+export const noteFieldsSchema = z.object(noteFieldShape).superRefine(guardNoteFields);
 export type NoteFields = z.infer<typeof noteFieldsSchema>;
 
 const clientIdSchema = z.string().regex(/^[a-zA-Z0-9_-]{6,64}$/);
 
 export const createNoteSchema = z
   .object({
-    ...fields,
+    ...noteFieldShape,
     pageNumber: z.number().int().min(1).max(999).default(1),
     clientId: clientIdSchema.optional(),
     sealed: z.boolean().optional(),
   })
-  .superRefine(guard);
+  .superRefine(guardNoteFields);
 
 export const updateNoteSchema = z
   .object({
@@ -64,7 +64,7 @@ export const updateNoteSchema = z
     time: optionalText(NOTE_LIMITS.time),
     sealed: z.boolean().optional(),
   })
-  .superRefine(guard);
+  .superRefine(guardNoteFields);
 
 export const guestNoteSchema = z.object({
   id: clientIdSchema,
