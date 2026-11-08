@@ -3,11 +3,12 @@
 import { useState, type FormEvent } from "react";
 import { InkInput } from "@/components/notebook/InkInput";
 import { NOTE_LIMITS } from "@/lib/validation/notes";
-import type { NoteDraft, NoteRecord } from "@/lib/notes/types";
+import type { NoteDraft } from "@/lib/notes/types";
 
 type Props = {
   page: number;
-  onWrite: (draft: NoteDraft, page: number) => Promise<NoteRecord | null>;
+  /** Resolve to something truthy once the entry is saved; the form then clears. */
+  onWrite: (draft: NoteDraft, page: number) => Promise<unknown>;
   compact?: boolean;
 };
 
@@ -23,9 +24,9 @@ export function EntryForm({ page, onWrite, compact }: Props) {
     e?.preventDefault();
     if (!name.trim() || busy) return;
     setBusy(true);
-    const note = await onWrite({ name, cause, details, time }, page);
+    const saved = await onWrite({ name, cause, details, time }, page);
     setBusy(false);
-    if (note) {
+    if (saved) {
       setName("");
       setCause("");
       setDetails("");

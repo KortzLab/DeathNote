@@ -24,6 +24,7 @@ export const SITE = {
 
 export const NAV = [
   { href: "/notebook", label: "The Notebook" },
+  { href: "/public", label: "Open Book" },
   { href: "/rules", label: "Rules" },
   { href: "/supporters", label: "Supporters" },
   { href: "/about", label: "About" },
