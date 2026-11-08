@@ -46,7 +46,10 @@ export function Intro() {
     };
     let last = 0;
     const onWheel = (e: WheelEvent) => {
-      if (stage !== "open" || Math.abs(e.deltaY) < 15) return;
+      // Only over the book while it fills the screen; anywhere else the wheel scrolls the page.
+      const overBook = (e.target as HTMLElement).tagName === "CANVAS" && window.scrollY < 40;
+      if (stage !== "open" || !overBook || Math.abs(e.deltaY) < 15) return;
+      e.preventDefault();
       const now = performance.now();
       if (now - last < 1200) return;
       last = now;
@@ -54,7 +57,7 @@ export function Intro() {
       else scene.current?.prev();
     };
     window.addEventListener("keydown", onKey);
-    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("wheel", onWheel, { passive: false });
     return () => {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("wheel", onWheel);

@@ -2,6 +2,7 @@
 
 import { memo, useCallback, useEffect, useState } from "react";
 import { InkText } from "@/components/notebook/InkText";
+import { openShare } from "@/components/public/ShareDialog";
 import { InkInput } from "@/components/notebook/InkInput";
 import { CountdownRing } from "@/components/notebook/CountdownRing";
 import { NOTE_LIMITS } from "@/lib/validation/notes";
@@ -172,6 +173,22 @@ export const NoteEntry = memo(function NoteEntry({
             aria-label={`Edit entry for ${note.name}`}
           >
             Edit
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              openShare({
+                name: note.name,
+                cause: note.cause,
+                details: note.details,
+                time: note.time,
+                source: "notebook",
+              })
+            }
+            className="text-ink/60 hover:text-ink-soft rounded px-1 font-serif text-[0.65rem] tracking-widest uppercase hover:underline"
+            aria-label={`Share entry for ${note.name}`}
+          >
+            Share
           </button>
           <button
             type="button"

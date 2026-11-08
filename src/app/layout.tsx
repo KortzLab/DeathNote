@@ -7,6 +7,8 @@ import { Footer } from "@/components/layout/Footer";
 import { SvgDefs } from "@/components/fx/SvgDefs";
 import { GothicBackdrop } from "@/components/fx/GothicBackdrop";
 import { SponsorModal } from "@/components/sponsor/SponsorModal";
+import { ShareDialog } from "@/components/public/ShareDialog";
+import { ReportDialog } from "@/components/public/ReportDialog";
 import { SponsorTrigger } from "@/components/sponsor/SponsorTrigger";
 import { isOxapayEnabled } from "@/lib/env";
 import { SITE } from "@/lib/site";
@@ -67,6 +69,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
           <Footer />
+          <ShareDialog />
+          <ReportDialog />
           {sponsorEnabled && (
             <>
               <SponsorTrigger variant="floating" />
