@@ -21,7 +21,6 @@ test("a shared note appears on the home page and opens its own page", async ({ p
   await note.hover();
   await note.getByRole("button", { name: /Share entry/ }).click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByLabel(/Blot out the name/).uncheck();
   await dialog.getByRole("button", { name: "Publish this page" }).click();
   await expect(dialog.getByLabel("Share link")).toHaveValue(/\/n\/[A-Za-z0-9]{10}$/);
 

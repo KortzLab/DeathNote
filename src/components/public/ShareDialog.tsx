@@ -18,7 +18,6 @@ export function ShareDialog() {
   const dialog = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const [note, setNote] = useState<ShareRequest | null>(null);
-  const [blurName, setBlurName] = useState(true);
   const [penName, setPenName] = useStoredValue(PEN_NAME_KEY);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +27,6 @@ export function ShareDialog() {
   useEffect(() => {
     const onOpen = (e: Event) => {
       setNote((e as CustomEvent<ShareRequest>).detail);
-      setBlurName(true);
       setShared(null);
       setError(null);
       setCopied(false);
@@ -43,7 +41,7 @@ export function ShareDialog() {
     setBusy(true);
     setError(null);
     try {
-      setShared(await sharePage({ ...note, penName: penName || null, blurName }));
+      setShared(await sharePage({ ...note, penName: penName || null }));
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -91,8 +89,7 @@ export function ShareDialog() {
         {note && (
           <PaperCard
             note={{
-              name: blurName ? null : note.name,
-              nameLength: note.name.length,
+              name: note.name,
               cause: note.cause ?? null,
               details: note.details ?? null,
               time: note.time ?? null,
@@ -103,15 +100,6 @@ export function ShareDialog() {
 
         {!shared ? (
           <>
-            <label className="text-muted flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={blurName}
-                onChange={(e) => setBlurName(e.target.checked)}
-                className="accent-blood"
-              />
-              Blot out the name (it never leaves the server)
-            </label>
             <label className="block text-sm">
               <span className="text-muted mb-1 block">Sign as (optional)</span>
               <input

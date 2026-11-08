@@ -155,7 +155,7 @@ export async function withdrawPublic(id: string) {
 }
 
 export async function sharePage(
-  draft: Draft & { penName?: string | null; blurName: boolean; source: "notebook" | "public" },
+  draft: Draft & { penName?: string | null; source: "notebook" | "public" },
 ) {
   const r = await call<{ id: string; url: string; ownerToken: string }>("/api/shares", {
     method: "POST",

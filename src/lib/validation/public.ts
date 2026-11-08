@@ -23,7 +23,6 @@ export const shareSchema = z
   .object({
     ...noteFieldShape,
     penName,
-    blurName: z.boolean().default(true),
     source: z.enum(["notebook", "public"]).default("notebook"),
   })
   .superRefine(guardNoteFields);

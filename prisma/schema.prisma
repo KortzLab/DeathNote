@@ -241,7 +241,6 @@ model SharedNote {
   details   String?
   time      String?
   penName   String?   @map("pen_name")
-  blurName  Boolean   @default(true) @map("blur_name")
   source    String    @default("notebook")
   authorId  String?   @map("author_id")
   ownerHash String    @map("owner_hash")

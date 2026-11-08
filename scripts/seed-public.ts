@@ -119,7 +119,6 @@ const OPEN_BOOK: Entry[] = [
 
 type Shared = Entry & {
   id: string;
-  blurName: boolean;
   source: "notebook" | "public";
   views: number;
 };
@@ -128,7 +127,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedVellum",
     source: "public",
-    blurName: false,
     views: 214,
     name: "Count Vellum Ashgrave",
     cause: "Swallowed by his own shadow",
@@ -139,7 +137,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedMirela",
     source: "public",
-    blurName: false,
     views: 389,
     name: "Mirela of the Grey Coast",
     cause: "Old age, peacefully",
@@ -150,7 +147,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedClocks",
     source: "public",
-    blurName: false,
     views: 167,
     name: "The Clockmaker of Wend",
     cause: "Ran out of time",
@@ -161,7 +157,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedGhostA",
     source: "notebook",
-    blurName: true,
     views: 96,
     name: "Agatha Wrenfield",
     cause: "Tripped over a lie she told",
@@ -172,7 +167,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedGhostB",
     source: "notebook",
-    blurName: true,
     views: 58,
     name: "Theodric Gale",
     cause: "Lost in his own maze",
@@ -182,7 +176,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedOrchrd",
     source: "public",
-    blurName: false,
     views: 142,
     name: "Old Man Pellow",
     cause: "Fell asleep in the orchard and never woke",
@@ -193,7 +186,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedWrenHa",
     source: "public",
-    blurName: false,
     views: 121,
     name: "Wren Halloway",
     cause: "Danced until dawn and then a little longer",
@@ -203,7 +195,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedGhostC",
     source: "notebook",
-    blurName: true,
     views: 73,
     name: "Mortimer Quill",
     cause: "Ink poisoning",
@@ -214,7 +205,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedCaptMB",
     source: "public",
-    blurName: false,
     views: 88,
     name: "Captain Morrow Black",
     cause: "Went down with a ship made of paper",
@@ -225,7 +215,6 @@ const SHARED: Shared[] = [
   {
     id: "SeedLantrn",
     source: "notebook",
-    blurName: false,
     views: 64,
     name: "The Lantern Thief",
     cause: "Lost in a library with no exits",
@@ -262,7 +251,6 @@ async function main() {
       details: rest.details ?? null,
       time: rest.time ?? null,
       penName: rest.penName ?? null,
-      blurName: rest.blurName,
       source: rest.source,
       candles: rest.candles,
       views: rest.views,

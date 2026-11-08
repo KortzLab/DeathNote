@@ -1,14 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { AUTO_HIDE_AT, blot, shouldAutoHide } from "@/lib/public/shared";
+import { AUTO_HIDE_AT, shouldAutoHide } from "@/lib/public/shared";
 import { publicEntrySchema, reportSchema, shareSchema } from "@/lib/validation/public";
 
 describe("public book and shares", () => {
-  it("never sends a blotted name, only a capped length", () => {
-    expect(blot({ name: "Lord Thistlewaite" }, true)).toEqual({ name: null, nameLength: 17 });
-    expect(blot({ name: "x".repeat(60) }, true).nameLength).toBe(24);
-    expect(blot({ name: "Mirela" }, false)).toEqual({ name: "Mirela", nameLength: 6 });
-  });
-
   it("hides an item once enough distinct people report it", () => {
     expect(shouldAutoHide(AUTO_HIDE_AT - 1)).toBe(false);
     expect(shouldAutoHide(AUTO_HIDE_AT)).toBe(true);
@@ -28,10 +22,9 @@ describe("public book and shares", () => {
     );
   });
 
-  it("blots shared names by default", () => {
+  it("shares notes from the notebook by default", () => {
     const share = shareSchema.parse({ name: "Mirela" });
-    expect(share.blurName).toBe(true);
-    expect(share.source).toBe("notebook");
+    expect(share).toMatchObject({ name: "Mirela", source: "notebook", penName: null });
   });
 
   it("only accepts known report reasons and targets", () => {

@@ -33,8 +33,7 @@ export default function PrivacyPage() {
       <p>
         These are public by design. Anything you write in the Open Book, and any page you choose to
         share, can be read by anyone and appears on the home page. Shared pages are a copy: editing
-        or deleting the original note does not change them. If you blot out the name, the name is
-        never sent to anyone&apos;s browser.
+        or deleting the original note does not change them.
       </p>
       <p>
         Alongside the text and your optional pen name we store a one-way hash of your network

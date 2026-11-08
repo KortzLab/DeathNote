@@ -1,26 +1,13 @@
 import { InkText } from "@/components/notebook/InkText";
 
 export type CardNote = {
-  name: string | null;
-  nameLength: number;
+  name: string;
   cause: string | null;
   details?: string | null;
   time: string | null;
   penName: string | null;
   createdAt?: string;
 };
-
-/** An ink blot standing in for a hidden name. Same width as the name, nothing else. */
-export function BlottedName({ length }: { length: number }) {
-  return (
-    <span
-      role="img"
-      aria-label="Name blotted out"
-      className="bg-ink inline-block h-[0.8em] translate-y-[0.1em] rounded-sm align-baseline"
-      style={{ width: `${Math.max(4, length) * 0.55}em`, filter: "url(#ink-bleed)" }}
-    />
-  );
-}
 
 const dateFormat = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
@@ -50,11 +37,7 @@ export function PaperCard({
       <p
         className={`font-hand text-ink leading-tight ${big ? "text-5xl sm:text-6xl" : "text-3xl"}`}
       >
-        {note.name ? (
-          <InkText text={note.name} animate={animate} stagger={0.08} className="eyes-name" />
-        ) : (
-          <BlottedName length={note.nameLength} />
-        )}
+        <InkText text={note.name} animate={animate} stagger={0.08} className="eyes-name" />
       </p>
       {sub && (
         <p className={`font-hand text-ink-soft mt-2 ${big ? "text-3xl" : "text-xl"}`}>

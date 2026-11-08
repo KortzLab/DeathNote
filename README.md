@@ -82,8 +82,8 @@ Turn sound on in the header first if you also record video.
   pages (loaded a chapter at a time), autosaved on write, live "new names" updates, pen names,
   page jumps and a random page. Authors can withdraw their own entries.
 - **Shared pages** — share any note from your notebook or the Open Book. It gets its own page
-  (`/n/<id>`) with a generated preview image and shows up on the home page. Names can be blotted
-  out, and a blotted name never reaches the browser. Owners can unshare.
+  (`/n/<id>`) with a generated preview image and shows up on the home page.
+  Owners can unshare.
 - **Candles & reports** — light a candle for a page (one per person), or report it. Three
   reports from different people hide an item until a moderator reviews it in `/admin`.
 - **Privacy & safety** — your own notebook stays private; public content goes through the same

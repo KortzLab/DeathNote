@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BlottedName, PaperCard } from "@/components/public/PaperCard";
+import { PaperCard } from "@/components/public/PaperCard";
 import { InkLink } from "@/components/ui/InkLink";
 import { latestPublicEntries, publicStats, recentShares } from "@/lib/server/public";
 
@@ -35,7 +35,7 @@ export async function HomeFeed() {
             </h2>
           </div>
           <p className="text-muted max-w-sm text-sm">
-            Pages people chose to tear out and leave here. Names can be blotted out by their author.
+            Pages people chose to tear out and leave here for anyone to read.
           </p>
         </div>
 
@@ -51,7 +51,7 @@ export async function HomeFeed() {
                   href={`/n/${note.id}`}
                   className="group block transition-transform duration-300 hover:-translate-y-1"
                   style={{ rotate: `${((i * 37) % 7) - 3}deg` }}
-                  aria-label={`Open shared page${note.name ? ` for ${note.name}` : ""}`}
+                  aria-label={`Open shared page for ${note.name}`}
                 >
                   <PaperCard note={note} />
                   <p className="text-muted mt-2 flex justify-between px-1 text-xs">
@@ -91,9 +91,7 @@ export async function HomeFeed() {
           )}
           {fresh.map((e) => (
             <li key={e.id} className="border-b border-white/10 pb-3 last:border-0">
-              <p className="font-hand text-2xl text-white">
-                {e.name ?? <BlottedName length={e.nameLength} />}
-              </p>
+              <p className="font-hand text-2xl text-white">{e.name}</p>
               {(e.cause || e.penName) && (
                 <p className="font-serif text-xs text-white/60">
                   {e.cause}

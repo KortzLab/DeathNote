@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
-import { PUBLIC_PAGE_SIZE, blot, type PublicItem } from "@/lib/public/shared";
+import { PUBLIC_PAGE_SIZE, type PublicItem } from "@/lib/public/shared";
 
 type Row = {
   id: string;
@@ -24,10 +24,10 @@ const itemSelect = {
   createdAt: true,
 } as const;
 
-function toItem(row: Row, hideName = false): PublicItem {
+function toItem(row: Row): PublicItem {
   return {
     id: row.id,
-    ...blot(row, hideName),
+    name: row.name,
     cause: row.cause,
     details: row.details,
     time: row.time,
@@ -59,7 +59,7 @@ export async function publicPage(page: number): Promise<PublicItem[]> {
     take: PUBLIC_PAGE_SIZE,
     select: itemSelect,
   });
-  return rows.map((r) => toItem(r));
+  return rows.map(toItem);
 }
 
 export async function latestPublicEntries(take: number): Promise<PublicItem[]> {
@@ -69,7 +69,7 @@ export async function latestPublicEntries(take: number): Promise<PublicItem[]> {
     take,
     select: itemSelect,
   });
-  return rows.map((r) => toItem(r));
+  return rows.map(toItem);
 }
 
 export type SharedItem = PublicItem & { views: number; source: string };
@@ -77,10 +77,10 @@ export type SharedItem = PublicItem & { views: number; source: string };
 export async function sharedNote(id: string): Promise<SharedItem | null> {
   const row = await db.sharedNote.findFirst({
     where: { id, ...visible },
-    select: { ...itemSelect, blurName: true, views: true, source: true },
+    select: { ...itemSelect, views: true, source: true },
   });
   if (!row) return null;
-  return { ...toItem(row, row.blurName), views: row.views, source: row.source };
+  return { ...toItem(row), views: row.views, source: row.source };
 }
 
 export async function recentShares(take: number): Promise<SharedItem[]> {
@@ -88,7 +88,7 @@ export async function recentShares(take: number): Promise<SharedItem[]> {
     where: visible,
     orderBy: { createdAt: "desc" },
     take,
-    select: { ...itemSelect, blurName: true, views: true, source: true },
+    select: { ...itemSelect, views: true, source: true },
   });
-  return rows.map((r) => ({ ...toItem(r, r.blurName), views: r.views, source: r.source }));
+  return rows.map((r) => ({ ...toItem(r), views: r.views, source: r.source }));
 }

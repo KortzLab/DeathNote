@@ -21,9 +21,7 @@ export type TargetType = "public_entry" | "shared_note";
 /** What the browser receives for anything public. */
 export type PublicItem = {
   id: string;
-  /** null when the author chose to blot the name out */
-  name: string | null;
-  nameLength: number;
+  name: string;
   cause: string | null;
   details: string | null;
   time: string | null;
@@ -34,12 +32,4 @@ export type PublicItem = {
 
 export function shouldAutoHide(reports: number): boolean {
   return reports >= AUTO_HIDE_AT;
-}
-
-/**
- * A blotted name never reaches the client: we only send its length, so "view source" can't
- * reveal it. Length is capped so very long names don't hint at anything either.
- */
-export function blot<T extends { name: string }>(item: T, hide: boolean) {
-  return { name: hide ? null : item.name, nameLength: Math.min(item.name.length, 24) };
 }
